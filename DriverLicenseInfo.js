@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios'; // Import Axios
 
 const DriverLicenseInfo = ({ navigation }) => {
   const [carModel, setCarModel] = useState('');
@@ -11,15 +12,39 @@ const DriverLicenseInfo = ({ navigation }) => {
     const options = {
       noData: true,
     };
-    launchImageLibrary(options, response => {
+    launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else if (response.assets && response.assets.length > 0) {
-        setCarPhoto(response.assets[0].uri);
+        const photoUri = response.assets[0].uri;
+        setCarPhoto(photoUri);
+        await verifyDriverLicense(photoUri);
       }
     });
+  };
+
+  const verifyDriverLicense = async (photoUri) => {
+    const formData = new FormData();
+    formData.append('licenseImage', {
+      uri: photoUri,
+      type: 'image/jpeg',
+      name: 'license.jpg',
+    });
+
+    try {
+      const response = await axios.post('API_ENDPOINT', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'ioBM7y1VCX45pIxunQeLTXVFGk1Y5MgX',
+        },
+      });
+
+      console.log('Verification response:', response.data);
+    } catch (error) {
+      console.error('Verification error:', error);
+    }
   };
 
   const handleSubmit = () => {
@@ -28,22 +53,8 @@ const DriverLicenseInfo = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <TextInput
-        placeholder="Drivers License"
-        value={carModel}
-        onChangeText={setCarModel}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Car Plate Number"
-        value={carPlateNumber}
-        onChangeText={setCarPlateNumber}
-        style={styles.input}
-      /> */}
       <Button title="Upload Drivers License" onPress={handleChoosePhoto} />
-      {carPhoto && (
-        <Image source={{ uri: carPhoto }} style={styles.image} />
-      )}
+      {carPhoto && <Image source={{ uri: carPhoto }} style={styles.image} />}
       <Button title="Next" onPress={handleSubmit} />
     </View>
   );
@@ -54,13 +65,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
   },
   image: {
     width: 100,
