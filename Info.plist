@@ -1,0 +1,4 @@
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Your custom message for location permission</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Your custom message for always location permission</string>
