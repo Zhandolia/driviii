@@ -11,9 +11,7 @@ const UserSecurityInfo = ({ navigation }) => {
       Alert.alert("Error", "You must accept the legal terms to proceed.");
       return;
     }
-    // Additional validation can be added here
     Alert.alert("Registration Complete", `ID: ${userID}\nYour account has been created.`);
-    // Navigate to the next part of the app or back to the login screen
     navigation.navigate('UserMenu');
   };
 
