@@ -62,6 +62,7 @@ const UserMenu = ({ navigation }) => {
         showsUserLocation={true}
         followsUserLocation={true}
       />
+      <View style={styles.pickupIndicator} />
       <View style={styles.buttonContainer}>
         <Button title="Confirm Pickup" onPress={() => Alert.alert("Pickup Confirmed", `Location: ${region.latitude}, ${region.longitude}`)} />
       </View>
@@ -88,8 +89,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     top: '50%',
     left: '50%',
-    marginTop: -5, // half of the height
-    marginLeft: -5, // half of the width
+    marginTop: -5,
+    marginLeft: -5,
+    zIndex: 1,
   },
 });
 
