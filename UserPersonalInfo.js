@@ -27,6 +27,7 @@ const UserPersonalInfo = ({ navigation }) => {
         >
           <Picker.Item label="Male" value="male" />
           <Picker.Item label="Female" value="female" />
+          <Picker.Item label="Don't want to say" value="Don't want to say" />
         </Picker>
       </View>
       <TextInput

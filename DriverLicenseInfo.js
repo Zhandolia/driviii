@@ -1,49 +1,43 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
+import { View, Button, StyleSheet, Image, Alert } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
 const DriverLicenseInfo = ({ navigation }) => {
-  const [carModel, setCarModel] = useState('');
-  const [carPlateNumber, setCarPlateNumber] = useState('');
   const [carPhoto, setCarPhoto] = useState(null);
 
   const handleChoosePhoto = () => {
-    const options = {
-      noData: true,
-    };
-    launchImageLibrary(options, async (response) => {
+    const options = { noData: true };
+    launchImageLibrary(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
+        Alert.alert('Error', 'There was an error picking the image.');
       } else if (response.assets && response.assets.length > 0) {
         const photoUri = response.assets[0].uri;
         setCarPhoto(photoUri);
-        await verifyDriverLicense(photoUri);
+        verifyDriverLicense(photoUri);
       }
     });
   };
 
   const verifyDriverLicense = async (photoUri) => {
     const formData = new FormData();
-    formData.append('licenseImage', {
-      uri: photoUri,
-      type: 'image/jpeg',
-      name: 'license.jpg',
-    });
+    formData.append('licenseImage', { uri: photoUri, type: 'image/jpeg', name: 'license.jpg' });
 
     try {
-      const response = await axios.post('API_ENDPOINT', formData, {
+      const response = await axios.post('ioBM7y1VCX45pIxunQeLTXVFGk1Y5MgX', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': 'ioBM7y1VCX45pIxunQeLTXVFGk1Y5MgX',
+          'Authorization': 'Bearer ioBM7y1VCX45pIxunQeLTXVFGk1Y5MgX',
         },
       });
 
       console.log('Verification response:', response.data);
     } catch (error) {
       console.error('Verification error:', error);
+      Alert.alert('Verification Error', 'Failed to verify the driver\'s license.');
     }
   };
 
