@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
 const DriverLicenseInfo = ({ navigation }) => {
   const [carModel, setCarModel] = useState('');
